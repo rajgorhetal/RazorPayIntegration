@@ -1,12 +1,10 @@
 const express = require("express");
 const Razorpay = require("razorpay");
-const app = express();
-app.use(express.static("./public"));
-app.use(express.json())
 
-// app.get("/", (req, res) => {
-//   res.send("<h1>Hola</h1>");
-// });
+const app = express();
+
+app.use(express.static("./public"));
+app.use(express.json());
 
 app.post("/order", async (req, res) => {
   const amount = req.body.amount;
@@ -17,20 +15,21 @@ app.post("/order", async (req, res) => {
   });
 
   var options = {
-    amount: amount * 100, //* 100 because currency comes in paise/lowest value
+    amount: amount * 100,
     currency: "INR",
-    receipt: "receipt#1"
+    receipt: "receipt#1",
   };
 
   const myOrder = await instance.orders.create(options);
 
   res.status(200).json({
     success: true,
-    amount,
+    amount: amount,
     order: myOrder,
   });
 });
 
+// Start the app
 app.listen(4000, () => {
-  console.log(`Server is listening on Port 4000...`);
+  console.log("Server is running at http://localhost:4000/");
 });
